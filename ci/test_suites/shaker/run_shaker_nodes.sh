@@ -115,7 +115,7 @@ source /root/openrc
 SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
 SERVER_PORT2=19000
 echo "SERVER_ENDPOINT: \$SERVER_ENDPOINT:\$SERVER_PORT"
-shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT2 --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml --report nodes_$DATE.html --debug
+shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT2 --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml --report nodes-$DATE.html --debug
 EOF
 ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT4}"
 fi
@@ -127,7 +127,7 @@ for proc in ${COMPUTE_IP_ARRAY[@]};do
 
 ########################## Copying reports to Fuel master node ###########################
 export DATE2=`date +%Y-%m-%d_%H:%M`
-scp $CONTROLLER_ADMIN_IP:/root/nodes_$DATE2.html /root/nodes-$DATE2.html
+scp $CONTROLLER_ADMIN_IP:/root/nodes-$DATE.html /root/nodes-$DATE2.html
 JSON_DATA=$(cat /root/nodes-$DATE2.html | grep -P "var report" | sed 's/    var report = //g' | sed 's/\;$//g')
 #echo "[test_json]" >> env.conf
 #echo "json_data =" $JSON_DATA >> env.conf
