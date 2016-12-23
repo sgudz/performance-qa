@@ -76,9 +76,10 @@ JSON_DATA=$(cat /root/VMs-$DATE.html | grep -P "var report" | sed 's/    var rep
 echo $JSON_DATA > results.json
 MEDIAN=$(grep -Po '"median":(\d*?,|.*?[^\\]",)' results.json | cut -d " " -f2 | sed 's/\,//g' | cut -d "." -f1)
 STDEV=$(grep -Po '"median":(\d*?,|.*?[^\\]",)' results.json | cut -d " " -f4 | sed 's/\,//g' | cut -d "." -f1)
+echo "MEDIAN IS ${MEDIAN}"
+echo "STDEV IS ${STDEV}"
 export MEDIAN
 export STDEV
 #/usr/bin/python addresult.py
 echo "Done."
-
 echo "finished" > ${TEST_STATUS_FILE}
