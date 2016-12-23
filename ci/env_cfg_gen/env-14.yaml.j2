@@ -1,0 +1,208 @@
+---
+aliases:
+  management_pool:
+   - &management 192.168.{{ env_id * 10 }}.0/24:24
+
+  storage_pool:
+   - &storage 192.168.{{ env_id * 10 + 1}}.0/24:24
+
+  public_pool:
+   - &public 172.16.44.0/22:22
+
+  fuelweb_pool:
+  - &fuelweb 10.{{ env_id }}.0.0/16:16
+
+  private_pool:
+  - &private 192.168.{{ env_id * 10 + 4}}.0/22:22  
+
+  default_interface_model:
+   - &interface_model !os_env INTERFACE_MODEL, e1000
+  
+
+template:
+  devops_settings:
+    env_name: !os_env ENV_NAME
+
+    address_pools:
+      fuelweb_admin-pool01:
+        net: *fuelweb
+        params:
+          vlan_start: {{ env_id }}
+          ip_reserved:
+            gateway: +1
+            l2_network_device: +1  # l2_network_device will get this IP address
+          ip_ranges:
+            default: [+2, -2]
+
+      public-pool01:
+        net: *public
+        params:
+          ip_reserved:
+            gateway: +1
+            l2_network_device: +1  # l2_network_device will get this IP address
+          ip_ranges:
+            default: [172.16.47.231, 172.16.47.241]  # public IP range for 'default' nodegroup name
+            floating: [172.16.47.242, 172.16.47.254]
+
+      storage-pool01:
+        net: *storage
+        params:
+          vlan_start: 141
+
+      management-pool01:
+        net: *management
+        params:
+          vlan_start: 140
+
+      private-pool01:
+        net: *private
+        params:
+          vlan_start: 441
+          vlan_end: 459
+
+    groups:
+     - name: default
+       driver:
+         name: devops.driver.libvirt
+         params:
+           connection_string: !os_env CONNECTION_STRING, qemu:///system
+           storage_pool_name: !os_env STORAGE_POOL_NAME, default
+           stp: True
+           hpet: False
+           use_host_cpu: !os_env DRIVER_USE_HOST_CPU, true
+
+       network_pools:  # Address pools for OpenStack networks.
+         fuelweb_admin: fuelweb_admin-pool01
+         public: public-pool01
+         storage: storage-pool01
+         management: management-pool01
+         private: private-pool01
+
+       l2_network_devices:  
+         bridge:
+           dhcp: false
+           vlan_ifaces:
+             - {{ env_id }} 
+           forward:
+             mode: bridge
+           parent_iface:
+             phys_dev: ens3f1
+         admin:
+           address_pool: fuelweb_admin-pool01
+           dhcp: false
+           forward:
+             mode: nat
+           parent_iface:
+             #phys_dev: br-net
+             l2_net_dev: bridge
+             tag: {{ env_id }}
+         uplink:
+            address_pool: public-pool01
+            dhcp: false
+            forward:
+              mode: bridge
+            parent_iface:
+              phys_dev: br-uplink
+              #l2_net_dev: br-uplink
+              tag: 2
+         #   #vlan_ifaces:
+         #   #  - 2
+       nodes:
+        - name: admin        # Custom name of VM for Fuel admin node
+          role: fuel_master  # Fixed role for Fuel master node properties
+          params:
+            vcpu: !os_env ADMIN_NODE_CPU, 4
+            memory: !os_env ADMIN_NODE_MEMORY, 3072
+            boot:
+              - hd
+              - cdrom  # for boot from usb - without 'cdrom'
+            volumes:
+             - name: system
+               capacity: !os_env ADMIN_NODE_VOLUME_SIZE, 75
+               format: qcow2
+             - name: iso
+               source_image: !os_env ISO_PATH    # if 'source_image' set, then volume capacity is calculated from it's size
+               format: raw
+               device: cdrom   # for boot from usb - 'disk'
+               bus: ide        # for boot from usb - 'usb'
+            interfaces:
+             - label: iface1
+               l2_network_device: admin    # Libvirt bridge name. It is *NOT* a Nailgun network
+               interface_model: *interface_model
+             - label: iface2
+               l2_network_device: uplink
+               interface_model: *interface_model
+
+            network_config:
+              iface1:
+                networks:
+                 - fuelweb_admin
+              iface2:
+                networks:
+                 - public
+# SELECT servers.name as server, mac, server_interfaces.name as interface
+# FROM server_interfaces,servers
+# WHERE server_id IN 
+# (SELECT _id FROM servers WHERE default_env_id='6')
+# AND servers._id = server_interfaces.server_id
+# ORDER BY server, interface;
+#
+#
+# server |        mac        | interface 
+#--------+-------------------+-----------
+# cz5598 | 00:25:90:e9:c2:3a | eth0
+# cz5598 | 00:25:90:eb:de:88 | eth2
+# cz5598 | 00:25:90:eb:de:89 | eth3
+# cz7048 | 00:25:90:e3:3b:86 | eth0
+# cz7048 | 0c:c4:7a:1d:8c:f4 | eth2
+# cz7048 | 0c:c4:7a:1d:8c:f5 | eth3
+# cz7049 | 00:25:90:e3:37:34 | eth0
+# cz7049 | 0c:c4:7a:1d:92:9a | eth2
+# cz7049 | 0c:c4:7a:1d:92:9b | eth3
+# cz7050 | 00:25:90:e3:37:2c | eth0
+# cz7050 | 0c:c4:7a:1d:8c:16 | eth2
+# cz7050 | 0c:c4:7a:1d:8c:17 | eth3
+     - name: hw_nodes
+       driver:
+         name: devops.driver.baremetal
+       network_pools:  # Address pools for OpenStack networks.
+
+         fuelweb_admin: fuelweb_admin-pool01
+         public: public-pool01
+         storage: storage-pool01
+         management: management-pool01
+         private: private-pool01
+
+       nodes:
+       {% for node in nodes %}
+        # node id: {{ node.name }}  
+        - name: slave-{{ "%02d" |format(loop.index) }} 
+          role: fuel_slave
+          params:
+            ipmi_user: !os_env IPMI_USER
+            ipmi_password: {{ node.ipmi_pass }}
+            ipmi_previlegies: OPERATOR
+            ipmi_host: {{ node.ipmi_host }}
+            ipmi_lan_interface: lanplus
+            ipmi_port: 623
+
+            interfaces:
+             - label: eth0
+               mac_address: {{ node.macs['eth0'] }}
+             - label: eth2
+               mac_address: {{ node.macs['eth2'] }} 
+             - label: eth3
+               mac_address: {{ node.macs['eth3'] }}
+            network_config:
+              eth0:
+                networks:
+                 - public
+              eth2:
+                networks:
+                 - fuelweb_admin
+                 - storage
+                 - management
+              eth3:
+                 networks:
+                 - private
+         {% endfor %}

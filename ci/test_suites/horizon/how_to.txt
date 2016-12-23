@@ -1,0 +1,15 @@
+================================ requirements ================================
+
+To run horizon suite you need to install additional packages required by
+Selenium. To do that run next:
+
+  - apt-get install python-pip xvfb firefox
+  - pip install pyvirtualdisplay selenium xvfbwrapper
+
+================================ installation ================================
+
+Copy "horizon_load.py" file into "/opt/rally/plugins/" directory
+
+================================== execution =================================
+
+rally --debug task start horizon.yaml

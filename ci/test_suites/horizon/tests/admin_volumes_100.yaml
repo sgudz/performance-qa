@@ -1,0 +1,28 @@
+---
+  HorizonLoadScenario.open_page:
+    -
+      args:
+        page: "admin/volumes"
+        nof_items: -1
+      runner:
+        type: "serial"
+        times: 100
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        usercred:
+          name: "admin"
+          password: "admin"
+        selenium:
+          items_per_page: 100
+          horizon_base_url: {{ horizon_base_url }}
+        volumes:
+          size: 1
+          volumes_per_tenant: 100
+        quotas:
+          cinder:
+            volumes: -1
+      sla:
+        failure_rate:
+          max: 0

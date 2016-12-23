@@ -1,0 +1,38 @@
+---
+netconf: &netconf
+  provider: neutron
+  segment-type: vlan
+  pubip-to-all: false
+
+nodeconf: &nodes
+  - roles:
+    - controller
+    count: 3
+  - roles:
+    - compute
+    - ceph-osd
+    count: 7
+
+storage: &storage
+  volume-lvm: false
+  volume-ceph: true
+  image-ceph: true
+  rados-ceph: true
+  ephemeral-ceph: true
+  replica-ceph: 1
+
+template:
+  name: Performance CI Smoke
+  slaves: 10
+  cluster_template:
+    name: ReleaseCheck
+    release: ubuntu 14.04
+    network: *netconf
+    settings:
+      components:
+        sahara: false
+        murano: false
+        ceilometer: false
+      storages: *storage
+    nodes: *nodes
+

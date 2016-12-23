@@ -1,0 +1,24 @@
+---
+  HorizonLoadScenario.open_page:
+    -
+      args:
+        page: "project/images"
+        nof_items: 100
+      runner:
+        type: "serial"
+        times: 100
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        images:
+          image_url: "http://172.16.44.5/cirros-0.3.1-x86_64-disk.img"
+          image_type: "qcow2"
+          image_container: "bare"
+          images_per_tenant: 100
+        selenium:
+          items_per_page: 100
+          horizon_base_url: {{ horizon_base_url }}
+      sla:
+        failure_rate:
+          max: 0

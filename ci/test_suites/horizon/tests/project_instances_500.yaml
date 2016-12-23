@@ -1,0 +1,37 @@
+---
+  HorizonLoadScenario.open_page:
+    -
+      args:
+        page: "project/instances"
+        nof_items: 500
+      runner:
+        type: "serial"
+        times: 100
+      context:
+        users:
+          tenants: 1
+          users_per_tenant: 1
+        servers:
+          flavor:
+              name: "m1.nano"
+          image:
+              name: "TestVM"
+          servers_per_tenant: 500
+        selenium:
+          items_per_page: 500
+          horizon_base_url: {{ horizon_base_url }}
+        quotas:
+          nova:
+            instances: -1
+            cores: -1
+            ram: -1
+            floating_ips: -1
+            security_groups: -1
+            security_group_rules: -1
+          neutron:
+            network: -1
+            subnet: -1
+            port: -1
+      sla:
+        failure_rate:
+          max: 0
