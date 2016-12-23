@@ -118,17 +118,6 @@ echo "SERVER_ENDPOINT: \$SERVER_ENDPOINT:\$SERVER_PORT"
 shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT2 --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml --report nodes_$DATE.html --debug
 EOF
 ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT4}"
-else
-	echo "Run scenarios for VMs"
-	REMOTE_SCRIPT3=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "mktemp"`
-	ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT3}" <<EOF
-#set -x
-source /root/openrc
-SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
-SERVER_PORT=18000
-shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/VMs.yaml --report VMs_$DATE.html --debug
-EOF
-	ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT3}"
 fi
 #################### Cleaning after nodes testing ########################################
 for proc in ${COMPUTE_IP_ARRAY[@]};do
@@ -137,9 +126,9 @@ for proc in ${COMPUTE_IP_ARRAY[@]};do
  done
 
 ########################## Copying reports to Fuel master node ###########################
-export BUILD=`cat /etc/fuel_build_id`
-scp $CONTROLLER_ADMIN_IP:/root/nodes_$DATE.html /root/nodes_build\-$BUILD\-$DATE.html
-JSON_DATA=$(cat /root/nodes_build\-$BUILD\-$DATE.html | grep -P "var report" | sed 's/    var report = //g' | sed 's/\;$//g')
+export DATE2=`date +%Y-%m-%d_%H:%M`
+scp $CONTROLLER_ADMIN_IP:/root/nodes_$DATE2.html /root/nodes-$DATE2.html
+JSON_DATA=$(cat /root/nodes-$DATE2.html | grep -P "var report" | sed 's/    var report = //g' | sed 's/\;$//g')
 #echo "[test_json]" >> env.conf
 #echo "json_data =" $JSON_DATA >> env.conf
 echo $JSON_DATA > results.json
@@ -152,4 +141,5 @@ export STDEV
 #/usr/bin/python addresult.py
 echo "Done."
 python test.py
+echo "STARTED TEST AT $DATE, FINISHED AT $DATE2"
 echo "finished" > ${TEST_STATUS_FILE}
