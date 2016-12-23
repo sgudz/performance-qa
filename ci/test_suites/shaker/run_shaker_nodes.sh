@@ -138,13 +138,8 @@ for proc in ${COMPUTE_IP_ARRAY[@]};do
 
 ########################## Copying reports to Fuel master node ###########################
 export BUILD=`cat /etc/fuel_build_id`
-if $BETWEEN_NODES;then
-        scp $CONTROLLER_ADMIN_IP:/root/nodes_$DATE.html /root/nodes_build\-$BUILD\-$DATE.html
-        JSON_DATA=$(cat /root/nodes_build\-$BUILD\-$DATE.html | grep -P "var report" | sed 's/    var report = //g' | sed 's/\;$//g')
-else
-        scp $CONTROLLER_ADMIN_IP:/root/VMs_$DATE.html /root/VMs_build\-$BUILD\-$DATE.html
-        JSON_DATA=$(cat /root/VMs_build\-$BUILD\-$DATE.html | grep -P "var report" | sed 's/    var report = //g' | sed 's/\;$//g')
-fi
+scp $CONTROLLER_ADMIN_IP:/root/nodes_$DATE.html /root/nodes_build\-$BUILD\-$DATE.html
+JSON_DATA=$(cat /root/nodes_build\-$BUILD\-$DATE.html | grep -P "var report" | sed 's/    var report = //g' | sed 's/\;$//g')
 #echo "[test_json]" >> env.conf
 #echo "json_data =" $JSON_DATA >> env.conf
 echo $JSON_DATA > results.json
