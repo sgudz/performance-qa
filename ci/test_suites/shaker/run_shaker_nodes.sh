@@ -2,7 +2,7 @@
 #set -x
 #This script should be run from the Master node in order to install and launch Shaker
 #This script tests "storage" network for test between nodes. You can change network by replacing NETWORK parameter(to do).
-export BETWEEN_NODES=True
+export BETWEEN_NODES=true
 export DATE=`date +%Y-%m-%d_%H:%M`
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TEST_STATUS_FILE=${DIR}/shaker_test_status.txt
