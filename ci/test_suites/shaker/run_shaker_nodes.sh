@@ -17,7 +17,7 @@ curl -s 'http://172.16.44.5/for_workarounds/shaker_scenario_for_perf_labs/VMs.ya
 export SSH_OPTS='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=quiet'
 CONTROLLER_ADMIN_IP=`fuel node | grep controller | awk -F "|" '{print $5}' | sed 's/ //g' | head -n 1`
 
-export CONTROLLER_PUBLIC_IP=$(ssh ${CONTROLLER_ADMIN_IP} "ifconfig | grep br-ex -A 1 | grep inet | awk ' {print \$2}' | sed 's/addr://g'")
+export CONTROLLER_PUBLIC_IP=$(ssh ${CONTROLLER_ADMIN_IP} "ifconfig br-ex | grep "inet addr" | cut -d ':' -f2 | cut -d ' ' -f1")
 echo "Controller Public IP: $CONTROLLER_PUBLIC_IP"
 
 ################### Define 2 computes IPs for testing between nodes ####################
@@ -83,14 +83,14 @@ EOF
 
 	if test $agent_id == "a-001";then
 		role="master"
-		ip=`ssh ${SSH_OPTS} $item ifconfig | grep "192.168." | awk -F ":" '{print $2}' | awk -F " " '{print $1}'  | awk '(NR==2)'`
+		ip=`ssh ${SSH_OPTS} $item ifconfig br-storage | grep "inet addr" | cut -d ':' -f2 | cut -d ' ' -f1`
 		FOR_SED="ip: $ip"
 		MASTER_IP=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "sed -n '11p;11q' /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml | sed 's/    //g'"`
 		ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "sed -i 's/${MASTER_IP}/${FOR_SED}/g' /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml"
 		ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP cat /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml | head -n 13
 	else
 		role="slave"
-		ip=`ssh ${SSH_OPTS} $item ifconfig | grep "192.168." | awk -F ":" '{print $2}' | awk -F " " '{print $1}'  | awk '(NR==2)'`
+		ip=`ssh ${SSH_OPTS} $item ifconfig br-storage | grep "inet addr" | cut -d ':' -f2 | cut -d ' ' -f1`
 		FOR_SED="ip: $ip"
 		SLAVE_IP=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "sed -n '16p;16q' /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml | sed 's/    //g'"`
 		ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "sed -i 's/${SLAVE_IP}/${FOR_SED}/g' /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml"
