@@ -59,6 +59,7 @@ sleep 5
 ############################## Runing scenarios ############################################
 
 echo "Run scenarios for VMs"
+REMOTE_SCRIPT3=`ssh $CONTROLLER_ADMIN_IP "mktemp"`
 ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT3}" <<EOF
 #set -x
 source /root/openrc
