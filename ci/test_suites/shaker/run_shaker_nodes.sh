@@ -140,6 +140,5 @@ export MEDIAN
 export STDEV
 #/usr/bin/python addresult.py
 echo "Done."
-python test.py
 echo "STARTED TEST AT $DATE, FINISHED AT $DATE2"
 echo "finished" > ${TEST_STATUS_FILE}
