@@ -104,10 +104,27 @@ client.password = '1qaz@WSX'
 ### Parsing env.conf file for required data
 parser = ConfigParser.SafeConfigParser()
 parser.read('/root/env.cfg')
-run_id = dict(parser.items('testrail'))['run_id']
 fuel_ip = dict(parser.items('fuel'))['fuel_ip']
 repl = int(dict(parser.items('testrail'))['repl'])
 version = str(dict(parser.items('testrail'))['version'])
+run_name = str(dict(parser.items('testrail'))['run_name'])
+create_new_run = str(dict(parser.items('testrail'))['create_new_run'])
+
+project_id = 3
+project_runs = client.send_get('get_runs/{}'.format(project_id))
+
+if create_new_run == "true":
+    if run_name not in [item['name'] for item in project_runs]:
+        data_str = """{"suite_id": %(suite_id)s, "name": "%(name)s", "assignedto_id": 24, "include_all": true}""" %{"suite_id": suite_id, "name": run_name}
+        data = json.loads(data_str)
+        result = client.send_post('add_run/3', data)
+        run_id = result['id']
+    else:
+        run_id = [our['id'] for our in project_runs if our['name'] == run_name][0]
+        print "Run exists. Run ID is: {}".format(run_id)
+else:
+    run_id = dict(parser.items('testrail'))['run_id']
+
 
 def get_tests_ids():
     tests = client.send_get('get_tests/{}'.format(run_id))
@@ -240,4 +257,4 @@ results_all_dict = {'results': results_list}
 print results_all_dict
 
 ### Pushing all resalts to testrail
-client.send_post('add_results/{}'.format(run_id), results_all_dict)
+#client.send_post('add_results/{}'.format(run_id), results_all_dict)
