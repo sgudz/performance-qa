@@ -2,7 +2,7 @@
  
 display_usage() { 
         echo "This script must be run with two arguments" 
-        echo -e "\nUsage:\n$0 [INTERFACE_NAME] [TEST_TIME_SECONDS]\n" 
+        echo -e "\nUsage:\n $0 [INTERFACE_NAME] [TEST_TIME_SECONDS]\n" 
         }
 if [  $# -le 1 ] 
         then 
