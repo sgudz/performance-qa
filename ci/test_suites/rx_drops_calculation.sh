@@ -2,7 +2,7 @@
  
 display_usage() { 
         echo "This script must be run with two arguments" 
-        echo -e "\nUsage:\n $0 [INTERFACE_NAME] [TEST_TIME_SECONDS]\n" 
+        echo -e "\nUsage:\n $0 [INTERFACE_NAME] [TEST_TIME_SECONDS] [RX or TX]\n" 
         }
 if [  $# -le 1 ] 
         then 
@@ -12,30 +12,31 @@ if [  $# -le 1 ]
 
 IFACE=$1
 TIME=$2
+RX_TX=$3
 ifconfig $IFACE > /tmp/$IFACE.data_before_test
 
-RX_DROPPED_BEFORE=`cat /tmp/$IFACE.data_before_test | grep "RX packets" | grep -Eo "dropped:[0-9]*" | cut -d ":" -f2`
-RX_TOTAL_BEFORE=`cat /tmp/$IFACE.data_before_test | grep "RX packets" | grep -Eo "packets:[0-9]*" | cut -d ":" -f2`
+DROPPED_BEFORE=`cat /tmp/$IFACE.data_before_test | grep "$RX_TX packets" | grep -Eo "dropped:[0-9]*" | cut -d ":" -f2`
+TOTAL_BEFORE=`cat /tmp/$IFACE.data_before_test | grep "$RX_TX packets" | grep -Eo "packets:[0-9]*" | cut -d ":" -f2`
 
-#echo "RX_TOTAL BEFORE TEST is $RX_TOTAL_BEFORE"
-#echo "RX_DROPPED_BEFORE TEST is $RX_DROPPED_BEFORE"
 echo "Waiting for $TIME second to collect data"
 sleep $TIME
 
 ifconfig $IFACE > /tmp/$IFACE.data_after_test
 
-RX_DROPPED_AFTER=`cat /tmp/$IFACE.data_after_test | grep "RX packets" | grep -Eo "dropped:[0-9]*" | cut -d ":" -f2`
-RX_TOTAL_AFTER=`cat /tmp/$IFACE.data_after_test | grep "RX packets" | grep -Eo "packets:[0-9]*" | cut -d ":" -f2`
+DROPPED_AFTER=`cat /tmp/$IFACE.data_after_test | grep "$RX_TX packets" | grep -Eo "dropped:[0-9]*" | cut -d ":" -f2`
+TOTAL_AFTER=`cat /tmp/$IFACE.data_after_test | grep "$RX_TX packets" | grep -Eo "packets:[0-9]*" | cut -d ":" -f2`
 
-#echo "RX_TOTAL AFTER TEST is $RX_TOTAL_AFTER"
-#echo "RX_DROPPED_AFTER TEST is $RX_DROPPED_AFTER"
+let DURING_TEST=$TOTAL_AFTER-$TOTAL_BEFORE
+let PER_SEC=$DURING_TEST/$TIME
+echo "$RX_TX packets per second: $PER_SEC pps"
 
-let RX_DURING_TEST=$RX_TOTAL_AFTER-$RX_TOTAL_BEFORE
-let RX_PER_SEC=$RX_DURING_TEST/$TIME
-echo "RX packets per second: $RX_PER_SEC pps"
+let DROP_DURING_TEST=$DROPPED_AFTER-$DROPPED_BEFORE
+if [ $DURING_TEST == 0 ]; then
+  echo "0 packets during test"
+  exit 0
+fi
 
-let DROP_DURING_TEST=$RX_DROPPED_AFTER-$RX_DROPPED_BEFORE
-let PERCENTAGE=$DROP_DURING_TEST*100/$RX_DURING_TEST
-echo "Total packets recieved during test: $RX_DURING_TEST"
+let PERCENTAGE=$DROP_DURING_TEST*100/$DURING_TEST
+echo "Total packets recieved during test: $DURING_TEST"
 echo "Total dropped packets during test: $DROP_DURING_TEST"
 echo "$PERCENTAGE % dropped packets"
