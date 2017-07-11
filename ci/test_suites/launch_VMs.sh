@@ -42,26 +42,6 @@ else
 fi
 echo $net_id
 
-### Create necessary number of ports depends on defined variables
-
-for (( port=1; port<=$ports_per_vm; port++ ))
-do
-        if [ "$same_compute" == "false" ]; then
-                echo "Creating VMs on different computes"
-                computes=`nova  availability-zone-list | grep -oE "cmp[0-9]*"`
-                computes_number=`nova  availability-zone-list | grep -oE "cmp[0-9]*" | wc -l`
-                port_id[$port]=`neutron port-create --name sriov-port-$port-cmp001 $net_id --binding:vnic_type direct | awk '/ id/ {print $4}'`
-                echo ${port_id[$port]}
-        elif [ "$same_compute" == "true" ]; then
-                echo "Creating VMs on same compute"
-        fi
-done
-#port_id_cmp001=`neutron port-create --name sriov-port-1-cmp001 $net_id --binding:vnic_type direct | awk '/ id/ {print $4}'`
-#port_id_cmp002=`neutron port-create --name sriov-port-1-cmp002 $net_id --binding:vnic_type direct | awk '/ id/ {print $4}'`
-#echo $port_id_cmp001
-#echo $port_id_cmp002
-
-
 ### Using custom image with pktgen (MoonGen) and dpdk built
 if [ -z "`glance image-list | grep ubuntu1604pktgen`" ]; then
         wget http://mos-scale-share.mirantis.com/sgudz/ubuntu1604pktgen.qcow2
@@ -75,5 +55,25 @@ if [ -z "`nova flavor-list | grep huge`" ]; then
         nova flavor-key 12345 set hw:mem_page_size=1048576
 fi
 
+### Create necessary number of ports depends on defined variables
+first_compute=`nova  availability-zone-list | grep -oE "cmp[0-9]*" | awk 'NR==1'`
+second_compute=`nova  availability-zone-list | grep -oE "cmp[0-9]*" | awk 'NR==2'`
+computes_number=`nova  availability-zone-list | grep -oE "cmp[0-9]*" | wc -l`
+echo $first_compute $second_compute
+
+for (( port=1; port<=$ports_per_vm; port++ ))
+do
+        if [ "$same_compute" == "false" ]; then
+                echo "Creating VMs on different computes"
+                port_id_first_compute[$port]=`neutron port-create --name sriov-port-$port-$first_compute $net_id --binding:vnic_type direct | awk '/ id/ {print $4}'`
+                port_id_second_compute[$port]=`neutron port-create --name sriov-port-$port-$second_compute $net_id --binding:vnic_type direct | awk '/ id/ {print $4}'`
+#               echo ${port_id[$port]}
+        elif [ "$same_compute" == "true" ]; then
+                echo "Creating VMs on same compute"
+                port_id_cmp001[$port]=`neutron port-create --name sriov-port-$port-cmp001 $net_id --binding:vnic_type direct | awk '/ id/ {print $4}'`
+
+        fi
+
+done
 
 #nova boot --flavor huge4vcpu --image ubuntu1604pktgen --availability-zone nova:cmp001:cmp001 --nic port-id=$port_id_cmp001 --nic port-id=$port_id_cmp002 sriov-vm-cmp001
