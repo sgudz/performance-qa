@@ -49,7 +49,7 @@ if [ -z "`glance image-list | grep ubuntu1604pktgen`" ]; then
 fi
 
 ### Create flavor with 4 vcpu and 8G RAM with cpu_pinning and 1G hugepages if doesn't exist
-if [ -z "`nova flavor-list | grep huge`" ]; then
+if [ -z "`nova flavor-list | grep huge4vcpu`" ]; then
         nova flavor-create huge4vcpu 12345 8192 140 4
         nova flavor-key 12345 set hw:cpu_policy=dedicated
         nova flavor-key 12345 set hw:mem_page_size=1048576
@@ -75,5 +75,5 @@ do
         fi
 
 done
-
-#nova boot --flavor huge4vcpu --image ubuntu1604pktgen --availability-zone nova:cmp001:cmp001 --nic port-id=$port_id_cmp001 --nic port-id=$port_id_cmp002 sriov-vm-cmp001
+if [ "$same_compute" == "false" ]; then
+        nova boot --flavor huge4vcpu --image ubuntu1604pktgen --availability-zone nova:$first_compute:$first_compute --nic port-id=$port_id_cmp001 --nic port-id=$port_id_cmp002 sriov-vm-cmp001
