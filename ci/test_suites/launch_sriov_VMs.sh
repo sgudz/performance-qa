@@ -1,5 +1,8 @@
 #!/bin/bash
 
+###This script should be run from ctl node
+
+
 source /root/keystonerc
 vlan=${VLAN:=1815}
 
