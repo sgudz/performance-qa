@@ -1,4 +1,4 @@
-apt-get install libpcap-dev make cmake git
+apt-get --yes --force-yes install libpcap-dev make cmake git
 
 wget http://fast.dpdk.org/rel/dpdk-16.11.1.tar.xz
 wget http://dpdk.org/browse/apps/pktgen-dpdk/snapshot/pktgen-dpdk-pktgen-3.1.2.tar.gz
