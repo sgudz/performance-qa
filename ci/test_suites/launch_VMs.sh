@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /root/keystonerc
+vlan=${VLAN:=1815}
 
 display_usage() { 
         echo "This script must be run with 3 arguments (Or you can use one argument \"default\" for default usage or cleaup for cleanup from VMs and ports)" 
@@ -21,34 +23,33 @@ cleanup() {
 	for port in ${port_list}; do neutron port-delete $port; done
 	}
 
-vlan=1815
-
 if [ "$1" == "cleanup" ]
 	then
 		cleanup
 		echo "Done"
 		exit 0
 
-elif [  $# -ne 3 ] && [ "$1" != "default" ] 
-        then
-                display_usage
-                exit 1
 elif [ "$1" == "default" ]
 	then
 		echo "Using default parameters: "
 		physnet_name="physnet1"
 		ports_per_vm=2
 		same_compute="false"
+
+elif [  $# -ne 3 ] 
+        then
+                display_usage
+                exit 1
+		
 else
 		physnet_name=$1
 		ports_per_vm=$2
 		same_compute=$3
 	fi
 
-echo -e "Physnet name is: $physnet_name\n Ports per VM: $ports_per_vm\n VMs on same compute: $same_compute"
+echo -e " Physnet name is: $physnet_name\n Ports per VM: $ports_per_vm\n VMs on same compute: $same_compute"
 sleep 2
 
-source /root/keystonerc
 
 ### Create network for SR-IOV if doesn't exist
 if [ -z "`neutron net-list | grep sriov-net`" ]; then
