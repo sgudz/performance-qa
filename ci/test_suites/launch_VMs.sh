@@ -1,16 +1,20 @@
 #!/bin/bash
 
+
 display_usage() { 
-        echo "This script must be run with 4 arguments (Or you can use one argument \"default\" for default usage)" 
-	echo -e "Default values are: physnet_name=physnet1, ports_per_VM=2, VMs_count=2, same_compute=false\n"
-        echo -e "Usage:\n $0 [physnet_name] [ports per VM]  [VMs count] [same compute (true/false)]"
+        echo "This script must be run with 3 arguments (Or you can use one argument \"default\" for default usage or cleaup for cleanup from VMs and ports)" 
+        echo -e "Usage:\n $0 [physnet_name] [ports per VM] [same compute (true/false)]"
 	echo -e " $0 default\n"
         echo -e "Example:\n $0 physnet1 2 2 false  --  for custom values"
-	echo -e " $0 default  --  for default values"
+	echo -e " $0 default  --  for default values (physnet_name=physnet1, ports_per_VM=2, same_compute=false)"
 	echo -e " $0 cleanup  --  for cleanup created VMs and ports"
         }
 
 cleanup() {
+	if [ -z "`neutron port-list | grep sriov-port`" ]; then
+		echo "Nothing to cleanup"
+		exit 0
+	fi
 	vms_list=`nova list | awk '/sriov-vm/ {print $2}'`
 	for vm in ${vms_list}; do nova delete $vm; done
 	port_list=`neutron port-list | awk '/sriov-port/ {print $2}'`
@@ -25,7 +29,7 @@ if [ "$1" == "cleanup" ]
 		echo "Done"
 		exit 0
 
-elif [  $# -ne 4 ] && [ "$1" != "default" ] 
+elif [  $# -ne 3 ] && [ "$1" != "default" ] 
         then
                 display_usage
                 exit 1
@@ -34,17 +38,16 @@ elif [ "$1" == "default" ]
 		echo "Using default parameters: "
 		physnet_name="physnet1"
 		ports_per_vm=2
-		vms=2
 		same_compute="false"
 else
 		physnet_name=$1
 		ports_per_vm=$2
-		vms=$3
-		same_compute=$4
-fi
+		same_compute=$3
+	fi
 
-echo -e "Physnet name is: $physnet_name, Ports per VM: $ports_per_vm, Total VMs: $vms, VMs on same compute: $same_compute"
+echo -e "Physnet name is: $physnet_name\n Ports per VM: $ports_per_vm\n VMs on same compute: $same_compute"
 sleep 2
+
 source /root/keystonerc
 
 ### Create network for SR-IOV if doesn't exist
@@ -54,7 +57,7 @@ if [ -z "`neutron net-list | grep sriov-net`" ]; then
 else
 	net_id=`neutron net-list | awk '/sriov-net/ {print $2}'`
 fi
-echo $net_id
+#echo $net_id
 
 
 ### Using custom image with pktgen (MoonGen) and dpdk built
@@ -75,7 +78,7 @@ fi
 first_compute=`nova  availability-zone-list | grep -oE "cmp[0-9]*" | awk 'NR==1'`
 second_compute=`nova  availability-zone-list | grep -oE "cmp[0-9]*" | awk 'NR==2'`
 computes_number=`nova  availability-zone-list | grep -oE "cmp[0-9]*" | wc -l`
-echo $first_compute $second_compute
+#echo $first_compute $second_compute
 
 arguments_first=""
 arguments_second=""
@@ -96,9 +99,8 @@ do
 	
 done
 
-echo $arguments_first $arguments_second
+#echo $arguments_first $arguments_second
 
-#for item in ${ports_per_vm}
 
 
 if [ "$same_compute" == "false" ]; then
@@ -107,4 +109,5 @@ if [ "$same_compute" == "false" ]; then
 else
 	nova boot --flavor huge4vcpu --image ubuntu1604pktgen --availability-zone nova:$first_compute:$first_compute $arguments_first sriov-vm-1-$first_compute
 	nova boot --flavor huge4vcpu --image ubuntu1604pktgen --availability-zone nova:$first_compute:$first_compute $arguments_second sriov-vm-2-$first_compute
+#nova boot --flavor huge4vcpu --image ubuntu1604pktgen --availability-zone nova:cmp001:cmp001 --nic port-id=$port_id_cmp001 --nic port-id=$port_id_cmp002 sriov-vm-cmp001
 fi
