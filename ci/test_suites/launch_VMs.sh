@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 display_usage() { 
         echo "This script must be run with 4 arguments (Or you can use one argument \"default\" for default usage)" 
 	echo -e "Default values are: physnet_name=physnet1, ports_per_VM=2, VMs_count=2, same_compute=false\n"
@@ -42,10 +41,10 @@ else
 		ports_per_vm=$2
 		vms=$3
 		same_compute=$4
-	fi
+fi
 
 echo -e "Physnet name is: $physnet_name, Ports per VM: $ports_per_vm, Total VMs: $vms, VMs on same compute: $same_compute"
-
+sleep 2
 source /root/keystonerc
 
 ### Create network for SR-IOV if doesn't exist
