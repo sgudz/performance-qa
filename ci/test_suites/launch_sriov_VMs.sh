@@ -2,7 +2,6 @@
 
 ###This script should be run from ctl node
 
-
 source /root/keystonerc
 vlan=${VLAN:=1815}
 
@@ -53,7 +52,6 @@ fi
 echo -e " Physnet name is: $physnet_name\n Ports per VM: $ports_per_vm\n VMs on same compute: $same_compute"
 sleep 2
 
-
 ### Create network for SR-IOV if doesn't exist
 if [ -z "`neutron net-list | grep sriov-net`" ]; then
 	net_id=`neutron net-create --provider:physical_network=$physnet_name --provider:segmentation_id=$vlan sriov-net | awk '/ id/ {print $4}'`
@@ -62,7 +60,6 @@ else
 	net_id=`neutron net-list | awk '/sriov-net/ {print $2}'`
 fi
 #echo $net_id
-
 
 ### Using custom image with pktgen (MoonGen) and dpdk built
 if [ -z "`glance image-list | grep ubuntu1604pktgen`" ]; then
@@ -103,8 +100,6 @@ do
 done
 
 #echo $arguments_first $arguments_second
-
-
 
 if [ "$same_compute" == "false" ]; then
 	nova boot --flavor huge4vcpu --image ubuntu1604pktgen --availability-zone nova:$first_compute:$first_compute $arguments_first sriov-vm-$first_compute
