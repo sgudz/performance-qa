@@ -45,7 +45,7 @@ else
 		physnet_name=$1
 		ports_per_vm=$2
 		same_compute=$3
-	fi
+fi
 
 echo -e " Physnet name is: $physnet_name\n Ports per VM: $ports_per_vm\n VMs on same compute: $same_compute"
 sleep 2
@@ -74,8 +74,7 @@ if [ -z "`nova flavor-list | grep huge`" ]; then
         nova flavor-key 12345 set hw:mem_page_size=1048576
 fi
 
-### Create necessary number of ports depends on defined variables
-
+### Create necessary number of ports depending on defined variables
 first_compute=`nova  availability-zone-list | grep -oE "cmp[0-9]*" | awk 'NR==1'`
 second_compute=`nova  availability-zone-list | grep -oE "cmp[0-9]*" | awk 'NR==2'`
 computes_number=`nova  availability-zone-list | grep -oE "cmp[0-9]*" | wc -l`
@@ -110,5 +109,4 @@ if [ "$same_compute" == "false" ]; then
 else
 	nova boot --flavor huge4vcpu --image ubuntu1604pktgen --availability-zone nova:$first_compute:$first_compute $arguments_first sriov-vm-1-$first_compute
 	nova boot --flavor huge4vcpu --image ubuntu1604pktgen --availability-zone nova:$first_compute:$first_compute $arguments_second sriov-vm-2-$first_compute
-#nova boot --flavor huge4vcpu --image ubuntu1604pktgen --availability-zone nova:cmp001:cmp001 --nic port-id=$port_id_cmp001 --nic port-id=$port_id_cmp002 sriov-vm-cmp001
 fi
