@@ -1,6 +1,5 @@
 #!/bin/bash
-
-###This script should be run from ctl node
+#set -x
 
 source /root/keystonerc
 vlan=${VLAN:=1815}
@@ -15,7 +14,7 @@ display_usage() {
         }
 
 cleanup() {
-	if [ -z "`neutron port-list | grep sriov-port`" ]; then
+	if [ -z "`neutron port-list | grep sriov-port`" ] && [ -z "`neutron net-list | grep sriov-net`" ]; then
 		echo "Nothing to cleanup"
 		exit 0
 	fi
@@ -23,6 +22,8 @@ cleanup() {
 	for vm in ${vms_list}; do nova delete $vm; done
 	port_list=`neutron port-list | awk '/sriov-port/ {print $2}'`
 	for port in ${port_list}; do neutron port-delete $port; done
+	net_list=`neutron net-list | awk '/sriov-net/ {print $2}'`
+	for net in ${net_list}; do neutron net-delete $net; done
 	}
 
 if [ "$1" == "cleanup" ]
@@ -38,7 +39,7 @@ elif [ "$1" == "default" ]
 		ports_per_vm=2
 		same_compute="false"
 
-elif [  $# -ne 3 ] 
+elif [  $# -ne 3 ] && [ -z $4 ] 
         then
                 display_usage
                 exit 1
@@ -47,19 +48,27 @@ else
 		physnet_name=$1
 		ports_per_vm=$2
 		same_compute=$3
-fi
+	fi
 
 echo -e " Physnet name is: $physnet_name\n Ports per VM: $ports_per_vm\n VMs on same compute: $same_compute"
 sleep 2
+
 
 ### Create network for SR-IOV if doesn't exist
 if [ -z "`neutron net-list | grep sriov-net`" ]; then
 	net_id=`neutron net-create --provider:physical_network=$physnet_name --provider:segmentation_id=$vlan sriov-net | awk '/ id/ {print $4}'`
 	neutron subnet-create $net_id 10.250.0.0/24
 else
-	net_id=`neutron net-list | awk '/sriov-net/ {print $2}'`
+	if [ "`neutron net-show sriov-net | awk '/physical_network/ {print $4}'`" == "$physnet_name" ]; then
+		net_id=`neutron net-list | awk '/sriov-net/ {print $2}'`
+	else
+		cleanup
+		net_id=`neutron net-create --provider:physical_network=$physnet_name --provider:segmentation_id=$vlan sriov-net | awk '/ id/ {print $4}'`
+		neutron subnet-create $net_id 10.250.0.0/24
+	fi
 fi
 #echo $net_id
+
 
 ### Using custom image with pktgen (MoonGen) and dpdk built
 if [ -z "`glance image-list | grep ubuntu1604pktgen`" ]; then
@@ -74,7 +83,8 @@ if [ -z "`nova flavor-list | grep huge`" ]; then
         nova flavor-key 12345 set hw:mem_page_size=1048576
 fi
 
-### Create necessary number of ports depending on defined variables
+### Create necessary number of ports depends on defined variables
+
 first_compute=`nova  availability-zone-list | grep -oE "cmp[0-9]*" | awk 'NR==1'`
 second_compute=`nova  availability-zone-list | grep -oE "cmp[0-9]*" | awk 'NR==2'`
 computes_number=`nova  availability-zone-list | grep -oE "cmp[0-9]*" | wc -l`
@@ -101,10 +111,16 @@ done
 
 #echo $arguments_first $arguments_second
 
-if [ "$same_compute" == "false" ]; then
-	nova boot --flavor huge4vcpu --image ubuntu1604pktgen --availability-zone nova:$first_compute:$first_compute $arguments_first sriov-vm-$first_compute
-	nova boot --flavor huge4vcpu --image ubuntu1604pktgen --availability-zone nova:$second_compute:$second_compute $arguments_second sriov-vm-$second_compute
+if [ -z $4 ]; then
+	image_for_vm="ubuntu1604pktgen"
 else
-	nova boot --flavor huge4vcpu --image ubuntu1604pktgen --availability-zone nova:$first_compute:$first_compute $arguments_first sriov-vm-1-$first_compute
-	nova boot --flavor huge4vcpu --image ubuntu1604pktgen --availability-zone nova:$first_compute:$first_compute $arguments_second sriov-vm-2-$first_compute
+	image_for_vm="$4"
+fi
+
+if [ "$same_compute" == "false" ]; then
+	nova boot --flavor huge4vcpu --image $image_for_vm --availability-zone nova:$first_compute:$first_compute $arguments_first sriov-vm-$first_compute
+	nova boot --flavor huge4vcpu --image $image_for_vm --availability-zone nova:$second_compute:$second_compute $arguments_second sriov-vm-$second_compute
+else
+	nova boot --flavor huge4vcpu --image $image_for_vm --availability-zone nova:$first_compute:$first_compute $arguments_first sriov-vm-1-$first_compute
+	nova boot --flavor huge4vcpu --image $image_for_vm --availability-zone nova:$first_compute:$first_compute $arguments_second sriov-vm-2-$first_compute
 fi
