@@ -1,0 +1,75 @@
+tempest.api.compute.admin.test_floating_ips_bulk.FloatingIPsBulkAdminTestJSON.test_create_list_delete_floating_ips_bulk[id-2c8f145f-8012-4cb8-ac7e-95a587f0e4ab,network]: Skipped because no floating IPs
+tempest.api.compute.floating_ips.test_floating_ips_actions.FloatingIPsTestJSON.test_allocate_floating_ip[id-f7bfb946-297e-41b8-9e8c-aba8e9bb5194,network]: Skipped because no floating IPs
+tempest.api.compute.floating_ips.test_floating_ips_actions.FloatingIPsTestJSON.test_associate_already_associated_floating_ip[id-6edef4b2-aaf1-4abc-bbe3-993e2561e0fe,network]: Skipped because no floating IPs
+tempest.api.compute.floating_ips.test_floating_ips_actions.FloatingIPsTestJSON.test_associate_disassociate_floating_ip[id-307efa27-dc6f-48a0-8cd2-162ce3ef0b52,network]: Skipped because no floating IPs
+tempest.api.compute.floating_ips.test_floating_ips_actions.FloatingIPsTestJSON.test_delete_floating_ip[id-de45e989-b5ca-4a9b-916b-04a52e7bbb8b,network]: Skipped because no floating IPs
+tempest.api.compute.floating_ips.test_floating_ips_actions_negative.FloatingIPsNegativeTestJSON.test_allocate_floating_ip_from_nonexistent_pool[id-6e0f059b-e4dd-48fb-8207-06e3bba5b074,negative,network]: Skipped because no floating IPs
+tempest.api.compute.floating_ips.test_floating_ips_actions_negative.FloatingIPsNegativeTestJSON.test_associate_ip_to_server_without_passing_floating_ip[id-804b4fcb-bbf5-412f-925d-896672b61eb3,negative,network]: Skipped because no floating IPs
+tempest.api.compute.floating_ips.test_floating_ips_actions_negative.FloatingIPsNegativeTestJSON.test_associate_nonexistent_floating_ip[id-595fa616-1a71-4670-9614-46564ac49a4c,negative,network]: Skipped because no floating IPs
+tempest.api.compute.floating_ips.test_floating_ips_actions_negative.FloatingIPsNegativeTestJSON.test_delete_nonexistent_floating_ip[id-ae1c55a8-552b-44d4-bfb6-2a115a15d0ba,negative,network]: Skipped because no floating IPs
+tempest.api.compute.floating_ips.test_floating_ips_actions_negative.FloatingIPsNegativeTestJSON.test_dissociate_nonexistent_floating_ip[id-0a081a66-e568-4e6b-aa62-9587a876dca8,negative,network]: Skipped because no floating IPs
+tempest.api.compute.floating_ips.test_list_floating_ips.FloatingIPDetailsTestJSON.test_get_floating_ip_details[id-eef497e0-8ff7-43c8-85ef-558440574f84,network]: Skipped because no floating IPs
+tempest.api.compute.floating_ips.test_list_floating_ips.FloatingIPDetailsTestJSON.test_list_floating_ip_pools[id-df389fc8-56f5-43cc-b290-20eda39854d3,network]: Skipped because no floating IPs
+tempest.api.compute.floating_ips.test_list_floating_ips.FloatingIPDetailsTestJSON.test_list_floating_ips[id-16db31c3-fb85-40c9-bbe2-8cf7b67ff99f,network]: Skipped because no floating IPs
+tempest.api.compute.floating_ips.test_list_floating_ips_negative.FloatingIPDetailsNegativeTestJSON.test_get_nonexistent_floating_ip_details[id-7ab18834-4a4b-4f28-a2c5-440579866695,negative,network]: Skipped because no floating IPs
+tempest.api.compute.servers.test_server_rescue.ServerRescueTestJSON.test_rescued_vm_associate_dissociate_floating_ip[id-4842e0cf-e87d-4d9d-b61f-f4791da3cacc]: Skipped because no floating IPs
+tempest.api.network.admin.test_external_network_extension.ExternalNetworksTestJSON.test_delete_external_networks_with_floating_ip[id-82068503-2cf2-4ed4-b3be-ecb89432e4bb]: Skipped because no floating IPs
+tempest.api.network.admin.test_external_networks_negative.ExternalNetworksAdminNegativeTestJSON.test_create_port_with_precreated_floatingip_as_fixed_ip[id-d402ae6c-0be0-4d8e-833b-a738895d98d0,negative]: Skipped because no floating IPs
+tempest.api.network.admin.test_floating_ips_admin_actions.FloatingIPAdminTestJSON.test_create_list_show_floating_ip_with_tenant_id_by_admin[id-32727cc3-abe2-4485-a16e-48f2d54c14f2]: Skipped because no floating IPs
+tempest.api.network.admin.test_floating_ips_admin_actions.FloatingIPAdminTestJSON.test_list_floating_ips_from_admin_and_nonadmin[id-64f2100b-5471-4ded-b46c-ddeeeb4f231b]: Skipped because no floating IPs
+tempest.api.network.test_floating_ips.FloatingIPTestJSON.test_create_floating_ip_specifying_a_fixed_ip_address[id-36de4bd0-f09c-43e3-a8e1-1decc1ffd3a5,smoke]: Skipped because no floating IPs
+tempest.api.network.test_floating_ips.FloatingIPTestJSON.test_create_list_show_update_delete_floating_ip[id-62595970-ab1c-4b7f-8fcc-fddfe55e8718,smoke]: Skipped because no floating IPs
+tempest.api.network.test_floating_ips.FloatingIPTestJSON.test_create_update_floatingip_with_port_multiple_ip_address[id-45c4c683-ea97-41ef-9c51-5e9802f2f3d7]: Skipped because no floating IPs
+tempest.api.network.test_floating_ips.FloatingIPTestJSON.test_floating_ip_delete_port[id-e1f6bffd-442f-4668-b30e-df13f2705e77]: Skipped because no floating IPs
+tempest.api.network.test_floating_ips.FloatingIPTestJSON.test_floating_ip_update_different_router[id-1bb2f731-fe5a-4b8c-8409-799ade1bed4d]: Skipped because no floating IPs
+tempest.api.network.test_floating_ips_negative.FloatingIPNegativeTestJSON.test_associate_floatingip_port_ext_net_unreachable[id-6b3b8797-6d43-4191-985c-c48b773eb429,negative]: Skipped because no floating IPs
+tempest.api.network.test_floating_ips_negative.FloatingIPNegativeTestJSON.test_create_floatingip_in_private_network[id-50b9aeb4-9f0b-48ee-aa31-fa955a48ff54,negative]: Skipped because no floating IPs
+tempest.api.network.test_floating_ips_negative.FloatingIPNegativeTestJSON.test_create_floatingip_with_port_ext_net_unreachable[id-22996ea8-4a81-4b27-b6e1-fa5df92fa5e8,negative]: Skipped because no floating IPs
+tempest.api.compute.servers.test_create_server.ServersTestJSON.test_create_server_with_scheduler_hint_group[id-ed20d3fb-9d1f-4329-b160-543fbd5d9811]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_create_server.ServersTestJSON.test_host_name_is_same_as_server_name[id-ac1ad47f-984b-4441-9274-c9079b7a0666]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_create_server.ServersTestJSON.test_list_servers[id-9a438d88-10c6-4bcd-8b5b-5b6e25e1346f,smoke]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_create_server.ServersTestJSON.test_list_servers_with_detail[id-585e934c-448e-43c4-acbf-d06a9b899997]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_create_server.ServersTestJSON.test_verify_created_server_vcpus[id-cbc0f52f-05aa-492b-bdc1-84b575ca294b]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_create_server.ServersTestJSON.test_verify_duplicate_network_nics[id-1678d144-ed74-43f8-8e57-ab10dbf9b3c2]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_create_server.ServersTestJSON.test_verify_multiple_nics_order[id-0578d144-ed74-43f8-8e57-ab10dbf9b3c2]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_create_server.ServersTestJSON.test_verify_server_details[id-5de47127-9977-400a-936f-abcfbec1218f,smoke]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_create_server.ServersTestManualDisk.test_create_server_with_scheduler_hint_group[id-ed20d3fb-9d1f-4329-b160-543fbd5d9811]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_create_server.ServersTestManualDisk.test_host_name_is_same_as_server_name[id-ac1ad47f-984b-4441-9274-c9079b7a0666]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_create_server.ServersTestManualDisk.test_list_servers[id-9a438d88-10c6-4bcd-8b5b-5b6e25e1346f,smoke]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_create_server.ServersTestManualDisk.test_list_servers_with_detail[id-585e934c-448e-43c4-acbf-d06a9b899997]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_create_server.ServersTestManualDisk.test_verify_created_server_vcpus[id-cbc0f52f-05aa-492b-bdc1-84b575ca294b]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_create_server.ServersTestManualDisk.test_verify_duplicate_network_nics[id-1678d144-ed74-43f8-8e57-ab10dbf9b3c2]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_create_server.ServersTestManualDisk.test_verify_multiple_nics_order[id-0578d144-ed74-43f8-8e57-ab10dbf9b3c2]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_create_server.ServersTestManualDisk.test_verify_server_details[id-5de47127-9977-400a-936f-abcfbec1218f,smoke]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_create_server.ServersWithSpecificFlavorTestJSON.test_verify_created_server_ephemeral_disk[id-b3c7bcfc-bb5b-4e22-b517-c7f686b802ca]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_device_tagging.DeviceTaggingTest.test_device_tagging[id-a2e65a6c-66f1-4442-aaa8-498c31778d96,image,network,volume]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_device_tagging.DeviceTaggingTestV2_42.test_device_tagging[id-a2e65a6c-66f1-4442-aaa8-498c31778d96,image,network,volume]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_change_server_password[id-6158df09-4b82-4ab3-af6d-29cf36af858d]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_create_backup[id-b963d4f1-94b3-4c40-9e97-7b583f46e470,image]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_get_console_output[id-4b8867e6-fffa-4d54-b1d1-6fdda57be2f3]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_get_console_output_server_id_in_shutoff_status[id-5b65d4e7-4ecd-437c-83c0-d6b79d927568]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_get_console_output_with_unlimited_size[id-89104062-69d8-4b19-a71b-f47b7af093d7]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_get_vnc_console[id-c6bc11bf-592e-4015-9319-1c98dc64daf5]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_lock_unlock_server[id-80a8094c-211e-440a-ab88-9e59d556c7ee]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_pause_unpause_server[id-bd61a9fd-062f-4670-972b-2d6c3e3b9e73]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_reboot_server_hard[id-2cb1baf6-ac8d-4429-bf0d-ba8a0ba53e32,smoke]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_reboot_server_soft[id-4640e3ef-a5df-482e-95a1-ceeeb0faa84d]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_rebuild_server[id-aaa6cdf3-55a7-461a-add9-1c8596b9a07c]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_rebuild_server_in_stop_state[id-30449a88-5aff-4f9b-9866-6ee9b17f906d]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_rebuild_server_with_volume_attached[id-b68bd8d6-855d-4212-b59b-2e704044dace,volume]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_resize_server_confirm[id-1499262a-9328-4eda-9068-db1ac57498d2]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_resize_server_confirm_from_stopped[id-138b131d-66df-48c9-a171-64f45eb92962]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_resize_server_revert[id-c03aab19-adb1-44f5-917d-c419577e9e68]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_shelve_unshelve_server[id-77eba8e0-036e-4635-944b-f7a8f3b78dc9]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_stop_start_server[id-af8eafd4-38a7-4a4b-bdbc-75145a580560]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_actions.ServerActionsTestJSON.test_suspend_resume_server[id-0d8ee21e-b749-462d-83da-b85b41c86c7f]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_rescue.ServerRescueTestJSON.test_rescue_unrescue_instance[id-fd032140-714c-42e4-a8fd-adcd8df06be6]: Skipped related to no floating IPs
+tempest.api.compute.servers.test_server_rescue.ServerRescueTestJSON.test_rescued_vm_add_remove_security_group[id-affca41f-7195-492d-8065-e09eee245404]: Skipped related to no floating IPs
+tempest.api.compute.volumes.test_attach_volume.AttachVolumeShelveTestJSON.test_attach_volume_shelved_or_offload_server[id-13a940b6-3474-4c3c-b03f-29b89112bfee]: Skipped related to no floating IPs
+tempest.api.compute.volumes.test_attach_volume.AttachVolumeShelveTestJSON.test_detach_volume_shelved_or_offload_server[id-b54e86dd-a070-49c4-9c07-59ae6dae15aa]: Skipped related to no floating IPs
+tempest.api.compute.volumes.test_attach_volume.AttachVolumeShelveTestJSON.test_list_get_two_volume_attachments[id-757d488b-a951-4bc7-b3cd-f417028da08a]: Skipped related to no floating IPs
+tempest.api.compute.volumes.test_attach_volume.AttachVolumeShelveTestJSON.test_list_get_volume_attachments[id-7fa563fe-f0f7-43eb-9e22-a1ece036b513]: Skipped related to no floating IPs
+tempest.api.compute.volumes.test_attach_volume.AttachVolumeTestJSON.test_attach_detach_volume[id-52e9045a-e90d-4c0d-9087-79d657faffff]: Skipped related to no floating IPs
+tempest.api.compute.volumes.test_attach_volume.AttachVolumeTestJSON.test_list_get_two_volume_attachments[id-757d488b-a951-4bc7-b3cd-f417028da08a]: Skipped related to no floating IPs
+tempest.api.compute.volumes.test_attach_volume.AttachVolumeTestJSON.test_list_get_volume_attachments[id-7fa563fe-f0f7-43eb-9e22-a1ece036b513]: Skipped related to no floating IPs
+tempest.scenario.test_server_basic_ops.TestServerBasicOps.test_server_basic_ops[compute,id-7fff3fb3-91d8-4fd0-bd7d-0204f1f180ba,network,smoke]: Skipped related to no floating IPs
